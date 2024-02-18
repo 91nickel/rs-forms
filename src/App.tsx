@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React                                               from 'react';
+import { Navigate, Route, Routes, NavLink } from "react-router-dom";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="container">
+            <div className="row">
+                <div className="col-12">
+                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                        <div className="collapse navbar-collapse">
+                            <ul className="navbar-nav">
+                                <li className="nav-item">
+                                    <NavLink className="nav-link me-2" to="/">Главная</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link me-2" to="/signIn">Sign In</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link me-2" to="/signUp">Sign Up</NavLink>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <Routes>
+                <Route path="/" index element={<h1>Home</h1>}/>
+                <Route path="/signIn" element={<h1>Sign In</h1>}/>
+                <Route path="/signUp" element={<h1>Sign Up</h1>}/>
+                <Route path="*" element={<Navigate to="/"/>}/>
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
