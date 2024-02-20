@@ -1,15 +1,23 @@
-import React, { useState }                          from "react";
-import ITextFieldCommonProps, { TextFieldVariants } from "../interface/input.field";
-import TextField                                    from "./textInput";
+import React, { useState } from "react";
+import ITextFieldCommonProps, {
+    ITextFieldControllableProps,
+    ITextFieldStaticProps,
+    TextFieldVariants
+}                          from "../interface/input.field";
+import TextField           from "./textInput";
 
-const defaultParams: ITextFieldCommonProps = {
+const defaultStaticProps: ITextFieldStaticProps = {
     type: 'text',
     className: '',
-    description: '',
-    error: '',
-    label: 'Current Label',
     name: 'name',
+    defaultValue: '',
+}
+
+const defaultControllableProps: ITextFieldControllableProps = {
     placeholder: 'Your Placeholder',
+    label: 'Current Label',
+    description: 'Description',
+    error: 'Some error',
     variant: TextFieldVariants.default,
     radius: 4,
     size: 1,
@@ -17,50 +25,67 @@ const defaultParams: ITextFieldCommonProps = {
     required: false,
 }
 
+const defaultProps: ITextFieldCommonProps = {...defaultStaticProps, ...defaultControllableProps}
+
 const InputTest = () => {
-    const [params, setParams] = useState(defaultParams)
+    const [props, setProps] = useState(defaultProps)
 
     function handleChange(name: string, value: any) {
-        console.log('handleChange', name, value, params)
-        setParams(prevState => ({...prevState, [name]: value}))
+        console.log('handleChange', name, value, props)
+        setProps(prevState => ({...prevState, [name]: value}))
     }
-
-    console.log(params)
 
     return (
         <div className="row">
-            <div className="col-6 d-flex align-items-center">
-                <div className="w-100">
-                    <TextField {...params} onChange={() => null} onInput={() => null}/>
+            <div className="col-6">
+                <div className="row">
+                    <div className="col-12">
+                        <TextField {...props} onChange={() => null} onInput={() => null}/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <pre>
+                            {JSON.stringify(props, null, 2)}
+                        </pre>
+                    </div>
                 </div>
             </div>
             <div className="col-6">
                 <form>
                     {
-                        Object.keys(defaultParams).map((key) => {
-                            if (key === 'type') return null
+                        Object.keys(defaultControllableProps).map((key) => {
 
-                            const value = params[key as keyof ITextFieldCommonProps]
+                            const index = key as keyof ITextFieldControllableProps
+                            const value = props[index]
 
                             if (key === 'variant') {
                                 return (
-                                    Object.values(TextFieldVariants).map((v => {
-                                        return (
-                                            <span key={`variant-${v}`}>
-                                                <input
-                                                    type="radio"
-                                                    className="btn-check"
-                                                    id={`variant-${v}`}
-                                                    checked={params.variant === v}
-                                                    onChange={() => handleChange('variant', v)}
-                                                />
-                                                <label
-                                                    className="btn btn-secondary"
-                                                    htmlFor={`variant-${v}`}
-                                                >{v}</label>
-                                            </span>
-                                        )
-                                    }))
+                                    <div key={key}>
+                                        <label
+                                            htmlFor={key}
+                                            className="form-label"
+                                        >
+                                            {key}
+                                        </label>
+                                        <select
+                                            id={key}
+                                            name={key}
+                                            className="form-select"
+                                            onChange={e => handleChange(key, e.target.value)}
+                                        >
+                                            {
+                                                Object.values(TextFieldVariants).map(v =>
+                                                    <option
+                                                        key={`${key}-${v}`}
+                                                        value={v}
+                                                    >
+                                                        {v}
+                                                    </option>
+                                                )
+                                            }
+                                        </select>
+                                    </div>
                                 )
                             }
 
@@ -79,6 +104,7 @@ const InputTest = () => {
                                                 className="form-control"
                                                 id={key}
                                                 placeholder={key}
+                                                defaultValue={defaultProps[index].toString()}
                                                 onInput={
                                                     event => {
                                                         const target = event.target as HTMLInputElement
@@ -105,9 +131,10 @@ const InputTest = () => {
                                                 type="range"
                                                 className="form-range"
                                                 min="0"
-                                                max="5"
+                                                max={key === 'radius' ? '4' : 2}
                                                 id={key}
-                                                value={value}
+                                                // value={value}
+                                                defaultValue={defaultProps[index].toString()}
                                                 onChange={
                                                     event => {
                                                         const target = event.target as HTMLInputElement
@@ -129,6 +156,7 @@ const InputTest = () => {
                                             role="switch"
                                             id={key}
                                             checked={value}
+                                            defaultValue={defaultProps[index].toString()}
                                             onChange={
                                                 event => {
                                                     const target = event.target as HTMLInputElement
