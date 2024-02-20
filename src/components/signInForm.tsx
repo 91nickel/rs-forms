@@ -1,14 +1,14 @@
 import React, { useRef, useState }       from 'react'
 import TextField                         from "./textInput";
-import ITextFieldCommonProps             from "../interface/input.field";
-import { FieldTypes, TextFieldVariants } from '../interface/input.field'
+import ITextFieldCommonProps             from "interface/input.field";
+import { FieldTypes, TextFieldVariants } from 'interface/input.field'
 
 enum FieldNames {
     login = 'login',
-    pass = 'pass',
+    password = 'password',
 }
 
-type IFormValues = {
+export type IFormValues = {
     [key in FieldNames]: string;
 };
 
@@ -24,49 +24,73 @@ interface IFormFieldDescription extends ITextFieldCommonProps {
 const formFields: Array<IFormFieldDescription> = [
     {
         name: FieldNames.login,
+        className: '',
         type: FieldTypes.text,
-        variant: TextFieldVariants.default,
+        defaultValue: '',
+
+        placeholder: '',
         label: 'Login',
         description: '',
-        placeholder: '',
-        required: true,
-        className: '',
         error: '',
+        variant: TextFieldVariants.default,
         radius: 4,
         size: 1,
         disabled: false,
+        required: true,
+    },
+    {
+        name: FieldNames.password,
+        className: '',
+        type: FieldTypes.password,
+        defaultValue: '',
+
+        placeholder: '',
+        label: 'Password',
+        description: '',
+        error: '',
+        variant: TextFieldVariants.default,
+        radius: 4,
+        size: 1,
+        disabled: false,
+        required: true,
     },
 ]
 
 const defaultValues = Object.assign({}, ...formFields.map(f => ({[f.name]: ''}))) as IFormValues
 
-const SignInForm = ({}) => {
+const SignInForm = ({onSubmit}: IProps) => {
 
     const [errors, setErrors] = useState(defaultValues)
     const values = useRef(defaultValues)
 
-    function onInputChange(name: FieldNames, value: string) {
+    function handleChange(name: FieldNames, value: string) {
         values.current = {...values.current, [name]: value}
     }
 
+    function handleSubmit(event: React.FormEvent) {
+        event.preventDefault()
+        onSubmit(values.current)
+    }
+
     return (
-        <>
-            <form>
-                {
-                    formFields.map((field: IFormFieldDescription, i) => {
-                        return (
-                            <TextField
-                                key={field.name}
-                                {...field}
-                                error={errors[field.name] || ''}
-                                onInput={(value: string) => onInputChange(field.name, value)}
-                                onChange={(value: string) => onInputChange(field.name, value)}
-                            />
-                        )
-                    })
-                }
-            </form>
-        </>
+        <form onSubmit={handleSubmit}>
+            {
+                formFields.map((field: IFormFieldDescription, i) => {
+                    return (
+                        <TextField
+                            key={field.name}
+                            {...field}
+                            error={errors[field.name] || ''}
+                            onInput={(value: string) => handleChange(field.name, value)}
+                            onChange={(value: string) => handleChange(field.name, value)}
+                        />
+                    )
+                })
+            }
+            <button type="submit" className="btn btn-primary">
+                Submit
+            </button>
+        </form>
     )
 }
 

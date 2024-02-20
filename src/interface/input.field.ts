@@ -1,7 +1,7 @@
-
 export enum FieldTypes {
     text = 'text',
-    pass = 'pass',
+    password = 'password',
+    email = 'email',
 }
 
 export enum TextFieldVariants {
@@ -10,10 +10,19 @@ export enum TextFieldVariants {
     unstyled = 'unstyled',
 }
 
-export default interface ITextFieldCommonProps {
+export enum FieldSizes {
+    sm, md, lg
+}
+
+export interface ITextFieldStaticProps {
     name: string
     type: string
     className: string
+    defaultValue: string
+    text?: string
+}
+
+export interface ITextFieldControllableProps {
     placeholder: string
     label: string
     description: string
@@ -23,4 +32,7 @@ export default interface ITextFieldCommonProps {
     size: number
     disabled: boolean
     required: boolean
+}
+
+export default interface ITextFieldCommonProps extends ITextFieldStaticProps, ITextFieldControllableProps {
 }
