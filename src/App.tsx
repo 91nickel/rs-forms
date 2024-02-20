@@ -1,5 +1,8 @@
-import React                                               from 'react';
+import React                                from 'react';
 import { Navigate, Route, Routes, NavLink } from "react-router-dom";
+import SignIn                               from "layouts/signIn";
+import SignUp                               from "layouts/signUp";
+import TestInput                            from "layouts/testInput";
 
 function App() {
     return (
@@ -18,6 +21,9 @@ function App() {
                                 <li className="nav-item">
                                     <NavLink className="nav-link me-2" to="/signUp">Sign Up</NavLink>
                                 </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link me-2" to="/test">Test</NavLink>
+                                </li>
                             </ul>
                         </div>
                     </nav>
@@ -25,8 +31,9 @@ function App() {
             </div>
             <Routes>
                 <Route path="/" index element={<h1>Home</h1>}/>
-                <Route path="/signIn" element={<h1>Sign In</h1>}/>
-                <Route path="/signUp" element={<h1>Sign Up</h1>}/>
+                <Route path="/signIn" element={<SignIn/>}/>
+                <Route path="/signUp" element={<SignUp/>}/>
+                <Route path="/test" element={<TestInput/>}/>
                 <Route path="*" element={<Navigate to="/"/>}/>
             </Routes>
         </div>
